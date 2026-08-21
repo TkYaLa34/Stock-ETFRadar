@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { removeFromWatchlist, type WatchlistItem } from "@/app/dashboard/actions";
-import { StockChart, type PricePoint } from "@/components/StockChart";
 
 interface WatchlistTableProps {
   initialItems: WatchlistItem[];
@@ -11,34 +10,6 @@ interface WatchlistTableProps {
 export function WatchlistTable({ initialItems }: WatchlistTableProps) {
   const [activeTab, setActiveTab] = useState<"all" | "stock" | "etf">("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTicker, setSelectedTicker] = useState<string>(
-    initialItems[0]?.ticker || "AAPL"
-  );
-  const [chartData, setChartData] = useState<PricePoint[]>([]);
-  const [isChartLoading, setIsChartLoading] = useState(false);
-  const [isPositiveTrend, setIsPositiveTrend] = useState(true);
-
-  useEffect(() => {
-    async function fetchChartData() {
-      if (!selectedTicker) return;
-      setIsChartLoading(true);
-      try {
-        const res = await fetch(`/api/stock?symbol=${encodeURIComponent(selectedTicker)}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data.history) {
-            setChartData(data.history);
-            setIsPositiveTrend((data.change ?? 0) >= 0);
-          }
-        }
-      } catch (err) {
-        console.error("Error loading chart data:", err);
-      } finally {
-        setIsChartLoading(false);
-      }
-    }
-    fetchChartData();
-  }, [selectedTicker]);
 
   const filteredItems = initialItems.filter((item) => {
     const matchesTab =
@@ -50,22 +21,7 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
   });
 
   return (
-    <div className="space-y-8">
-      {/* Interactive Stock Chart Section */}
-      <div>
-        {isChartLoading ? (
-          <div className="w-full h-64 bg-neutral-900 border border-neutral-800 rounded-xl flex items-center justify-center text-gray-400">
-            Loading {selectedTicker} chart data...
-          </div>
-        ) : (
-          <StockChart
-            ticker={selectedTicker}
-            data={chartData}
-            isPositive={isPositiveTrend}
-          />
-        )}
-      </div>
-
+    <div className="space-y-6">
       {/* Search & Filter Controls */}
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
         {/* Search Bar */}
@@ -145,78 +101,67 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
                 </td>
               </tr>
             ) : (
-              filteredItems.map((item) => {
-                const isSelected = selectedTicker === item.ticker;
-                return (
-                  <tr
-                    key={item.id}
-                    onClick={() => setSelectedTicker(item.ticker)}
-                    className={`cursor-pointer transition-colors ${
-                      isSelected
-                        ? "bg-neutral-800/80 border-l-4 border-l-blue-500"
-                        : "hover:bg-neutral-800/50"
-                    }`}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="font-bold text-white text-base">
-                        {item.ticker}
-                      </div>
-                      <div className="text-xs text-gray-400">{item.name}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
-                          item.asset_type === "stock"
-                            ? "bg-blue-900/40 text-blue-400 border border-blue-800/50"
-                            : "bg-purple-900/40 text-purple-400 border border-purple-800/50"
-                        }`}
-                      >
-                        {item.asset_type}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right font-medium text-white">
-                      ${item.price.toFixed(2)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right font-medium">
-                      <span
-                        className={`inline-flex items-center gap-1 ${
-                          item.change >= 0 ? "text-emerald-400" : "text-rose-400"
-                        }`}
-                      >
-                        {item.change >= 0 ? "+" : ""}
-                        {item.change.toFixed(2)} ({item.change_percent >= 0 ? "+" : ""}
-                        {item.change_percent.toFixed(2)}%)
-                      </span>
-                    </td>
-                    <td
-                      className="px-6 py-4 whitespace-nowrap text-center"
-                      onClick={(e) => e.stopPropagation()}
+              filteredItems.map((item) => (
+                <tr
+                  key={item.id}
+                  className="hover:bg-neutral-800/50 transition-colors"
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="font-bold text-white text-base">
+                      {item.ticker}
+                    </div>
+                    <div className="text-xs text-gray-400">{item.name}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
+                        item.asset_type === "stock"
+                          ? "bg-blue-900/40 text-blue-400 border border-blue-800/50"
+                          : "bg-purple-900/40 text-purple-400 border border-purple-800/50"
+                      }`}
                     >
-                      <button
-                        onClick={async () => {
-                          await removeFromWatchlist(item.id);
-                        }}
-                        className="text-gray-500 hover:text-rose-400 p-1 rounded transition-colors"
-                        title="Remove from Watchlist"
+                      {item.asset_type}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right font-medium text-white">
+                    ${item.price.toFixed(2)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right font-medium">
+                    <span
+                      className={`inline-flex items-center gap-1 ${
+                        item.change >= 0 ? "text-emerald-400" : "text-rose-400"
+                      }`}
+                    >
+                      {item.change >= 0 ? "+" : ""}
+                      {item.change.toFixed(2)} ({item.change_percent >= 0 ? "+" : ""}
+                      {item.change_percent.toFixed(2)}%)
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <button
+                      onClick={async () => {
+                        await removeFromWatchlist(item.id);
+                      }}
+                      className="text-gray-500 hover:text-rose-400 p-1 rounded transition-colors"
+                      title="Remove from Watchlist"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>
