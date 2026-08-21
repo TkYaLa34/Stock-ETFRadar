@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { WatchlistTable } from "@/components/watchlist-table";
+import { ProfitCalculator } from "@/components/ProfitCalculator";
 import { addToWatchlist, signOut, type WatchlistItem } from "./actions";
 
 const DEFAULT_WATCHLIST: WatchlistItem[] = [
@@ -148,6 +149,8 @@ export default async function DashboardPage() {
         </div>
 
         <WatchlistTable initialItems={items} />
+
+        <ProfitCalculator />
       </main>
 
       <footer className="border-t border-neutral-800 py-6 text-center text-xs text-gray-500">
