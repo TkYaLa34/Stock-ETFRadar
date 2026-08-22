@@ -50,8 +50,9 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
   });
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      <div className="w-full overflow-hidden">
+    <div className="space-y-8">
+      {/* Interactive Stock Chart Section */}
+      <div>
         {isChartLoading ? (
           <div className="w-full h-64 bg-neutral-900 border border-neutral-800 rounded-xl flex items-center justify-center text-gray-400">
             Loading {selectedTicker} chart data...
@@ -65,8 +66,10 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
-        <div className="relative w-full sm:w-80 md:w-96">
+      {/* Search & Filter Controls */}
+      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+        {/* Search Bar */}
+        <div className="relative w-full sm:w-96">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg
               className="h-5 w-5 text-gray-400"
@@ -91,12 +94,13 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
           />
         </div>
 
+        {/* Tab Selector */}
         <div className="flex p-1 bg-neutral-900 rounded-lg border border-neutral-800 w-full sm:w-auto">
           {(["all", "stock", "etf"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 sm:flex-none px-3.5 py-1.5 text-xs font-semibold rounded-md capitalize transition-colors ${
+              className={`flex-1 sm:flex-none px-4 py-1.5 text-xs font-semibold rounded-md capitalize transition-colors ${
                 activeTab === tab
                   ? "bg-blue-600 text-white shadow-sm"
                   : "text-gray-400 hover:text-gray-200"
@@ -108,23 +112,24 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
         </div>
       </div>
 
-      <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-none sm:rounded-xl border-y sm:border border-neutral-800 bg-neutral-900 shadow-xl">
-        <table className="w-full text-left text-sm text-gray-300 min-w-[550px]">
+      {/* Watchlist Table */}
+      <div className="overflow-x-auto rounded-xl border border-neutral-800 bg-neutral-900 shadow-xl">
+        <table className="w-full text-left text-sm text-gray-300">
           <thead className="bg-neutral-950/60 text-xs uppercase text-gray-400 border-b border-neutral-800">
             <tr>
-              <th scope="col" className="px-4 sm:px-6 py-3.5">
+              <th scope="col" className="px-6 py-4">
                 Ticker / Name
               </th>
-              <th scope="col" className="px-4 sm:px-6 py-3.5">
+              <th scope="col" className="px-6 py-4">
                 Type
               </th>
-              <th scope="col" className="px-4 sm:px-6 py-3.5 text-right">
+              <th scope="col" className="px-6 py-4 text-right">
                 Price
               </th>
-              <th scope="col" className="px-4 sm:px-6 py-3.5 text-right">
+              <th scope="col" className="px-6 py-4 text-right">
                 24h Change
               </th>
-              <th scope="col" className="px-4 sm:px-6 py-3.5 text-center">
+              <th scope="col" className="px-6 py-4 text-center">
                 Action
               </th>
             </tr>
@@ -152,13 +157,13 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
                         : "hover:bg-neutral-800/50"
                     }`}
                   >
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="font-bold text-white text-base">
                         {item.ticker}
                       </div>
                       <div className="text-xs text-gray-400">{item.name}</div>
                     </td>
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase ${
                           item.asset_type === "stock"
@@ -169,10 +174,10 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
                         {item.asset_type}
                       </span>
                     </td>
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right font-medium text-white">
+                    <td className="px-6 py-4 whitespace-nowrap text-right font-medium text-white">
                       ${item.price.toFixed(2)}
                     </td>
-                    <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right font-medium">
+                    <td className="px-6 py-4 whitespace-nowrap text-right font-medium">
                       <span
                         className={`inline-flex items-center gap-1 ${
                           item.change >= 0 ? "text-emerald-400" : "text-rose-400"
@@ -184,7 +189,7 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
                       </span>
                     </td>
                     <td
-                      className="px-4 sm:px-6 py-4 whitespace-nowrap text-center"
+                      className="px-6 py-4 whitespace-nowrap text-center"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button
