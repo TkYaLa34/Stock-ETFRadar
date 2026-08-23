@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { WatchlistTable } from "@/components/watchlist-table";
 import { ProfitCalculator } from "@/components/ProfitCalculator";
 import { SecFinancialsCard } from "@/components/SecFinancialsCard";
-import { FavoritesWatchlistCard } from "@/components/FavoritesWatchlistCard";
 import { addToWatchlist, signOut, type WatchlistItem } from "./actions";
 
 const DEFAULT_WATCHLIST: WatchlistItem[] = [
@@ -154,10 +153,7 @@ export default async function DashboardPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <SecFinancialsCard initialCik="0000320193" tickerLabel="AAPL" />
-          <div className="space-y-8">
-            <FavoritesWatchlistCard />
-            <ProfitCalculator />
-          </div>
+          <ProfitCalculator />
         </div>
       </main>
 
