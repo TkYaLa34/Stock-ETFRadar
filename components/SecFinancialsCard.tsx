@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import {
   fetchAndParseSecFinancials,
   type ParsedFinancials,
+  type FinancialHealthStatus,
 } from "@/services/secService";
 import {
   ResponsiveContainer,
@@ -67,23 +68,68 @@ export function SecFinancialsCard({
       revenueBillion: Number((item.val / 1e9).toFixed(2)),
     })).reverse() || [];
 
+  const getBadgeStyle = (status: FinancialHealthStatus) => {
+    switch (status) {
+      case "strong_growth":
+        return "bg-emerald-950 text-emerald-400 border-emerald-800/60";
+      case "stable":
+        return "bg-amber-950 text-amber-400 border-amber-800/60";
+      case "decline":
+        return "bg-rose-950 text-rose-400 border-rose-800/60";
+      default:
+        return "bg-neutral-800 text-gray-400 border-neutral-700";
+    }
+  };
+
+  const getBadgeLabel = (status: FinancialHealthStatus) => {
+    switch (status) {
+      case "strong_growth":
+        return "Strong Growth (+5% YoY)";
+      case "stable":
+        return "Stable Performance";
+      case "decline":
+        return "Revenue Decline";
+      default:
+        return "Data Pending";
+    }
+  };
+
   return (
     <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 shadow-xl space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-800 pb-4">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <h3 className="text-lg font-bold text-white">
               SEC EDGAR Financials
             </h3>
-            <span className="px-2 py-0.5 text-xs font-bold rounded bg-emerald-950 text-emerald-400 border border-emerald-800/50">
+            <span className="px-2 py-0.5 text-xs font-bold rounded bg-blue-950 text-blue-400 border border-blue-800/50">
               Verified 10-K
             </span>
+
+            {/* Financial Health Badge */}
+            {financials && !isLoading && (
+              <span
+                title={financials.healthExplanation}
+                className={`px-2.5 py-0.5 text-xs font-bold rounded-full border cursor-help ${getBadgeStyle(
+                  financials.healthStatus
+                )}`}
+              >
+                {getBadgeLabel(financials.healthStatus)}
+              </span>
+            )}
           </div>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {financials?.entityName ? financials.entityName : `CIK: ${cik}`}
+
+          <p className="text-xs text-gray-400 mt-1">
+            {financials?.entityName ? financials.entityName : `CIK: ${cik}`}{" "}
+            {financials?.healthExplanation && (
+              <span className="text-gray-500 block sm:inline">
+                • {financials.healthExplanation}
+              </span>
+            )}
           </p>
         </div>
 
+        {/* CIK Search Form */}
         <form onSubmit={handleSearch} className="flex items-center gap-2">
           <input
             type="text"
@@ -171,7 +217,7 @@ export function SecFinancialsCard({
           </div>
 
           <div className="overflow-x-auto rounded-lg border border-neutral-800 bg-neutral-950">
-            <table className="w-full text-left text-xs text-gray-300">
+            <table className="w-full text-left text-xs text-gray-300 min-w-[500px]">
               <thead className="bg-neutral-900/60 uppercase text-gray-400 border-b border-neutral-800">
                 <tr>
                   <th className="px-4 py-3">Fiscal Period</th>

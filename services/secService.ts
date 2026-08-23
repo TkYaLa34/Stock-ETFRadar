@@ -1,3 +1,9 @@
+export type FinancialHealthStatus =
+  | "strong_growth"
+  | "stable"
+  | "decline"
+  | "unknown";
+
 export interface FactItem {
   end?: string;
   val?: number;
@@ -36,6 +42,9 @@ export interface ParsedFinancials {
   cik: string;
   revenues: RevenueMetric[];
   latestRevenue: number | null;
+  yoyGrowthPercent: number | null;
+  healthStatus: FinancialHealthStatus;
+  healthExplanation: string;
 }
 
 /**
@@ -51,7 +60,15 @@ export function extractCompanyRevenues(data: SecCompanyFacts): ParsedFinancials 
 
   const usGaap = data?.facts?.["us-gaap"];
   if (!usGaap) {
-    return { entityName, cik, revenues: [], latestRevenue: null };
+    return {
+      entityName,
+      cik,
+      revenues: [],
+      latestRevenue: null,
+      yoyGrowthPercent: null,
+      healthStatus: "unknown",
+      healthExplanation: "Insufficient SEC 10-K data to evaluate financial health.",
+    };
   }
 
   const revenueConceptKeys = [
@@ -70,7 +87,15 @@ export function extractCompanyRevenues(data: SecCompanyFacts): ParsedFinancials 
   }
 
   if (!foundConcept || !foundConcept.units?.["USD"]) {
-    return { entityName, cik, revenues: [], latestRevenue: null };
+    return {
+      entityName,
+      cik,
+      revenues: [],
+      latestRevenue: null,
+      yoyGrowthPercent: null,
+      healthStatus: "unknown",
+      healthExplanation: "No US-GAAP USD revenue concepts reported in filings.",
+    };
   }
 
   const usdItems = foundConcept.units["USD"];
@@ -97,12 +122,35 @@ export function extractCompanyRevenues(data: SecCompanyFacts): ParsedFinancials 
   }
 
   const latestRevenue = uniqueRevenues[0]?.val ?? null;
+  const previousRevenue = uniqueRevenues[1]?.val ?? null;
+
+  let yoyGrowthPercent: number | null = null;
+  let healthStatus: FinancialHealthStatus = "unknown";
+  let healthExplanation = "Data unavailable";
+
+  if (latestRevenue !== null && previousRevenue !== null && previousRevenue > 0) {
+    yoyGrowthPercent = ((latestRevenue - previousRevenue) / previousRevenue) * 100;
+
+    if (yoyGrowthPercent >= 5) {
+      healthStatus = "strong_growth";
+      healthExplanation = `Strong YoY revenue growth of +${yoyGrowthPercent.toFixed(1)}% derived from 10-K filings.`;
+    } else if (yoyGrowthPercent >= -2) {
+      healthStatus = "stable";
+      healthExplanation = `Stable annual revenue trajectory (${yoyGrowthPercent >= 0 ? "+" : ""}${yoyGrowthPercent.toFixed(1)}% YoY).`;
+    } else {
+      healthStatus = "decline";
+      healthExplanation = `Revenue declined by ${yoyGrowthPercent.toFixed(1)}% compared to prior fiscal year.`;
+    }
+  }
 
   return {
     entityName,
     cik,
     revenues: uniqueRevenues,
     latestRevenue,
+    yoyGrowthPercent,
+    healthStatus,
+    healthExplanation,
   };
 }
 
@@ -126,6 +174,9 @@ export async function fetchAndParseSecFinancials(
       cik,
       revenues: [],
       latestRevenue: null,
+      yoyGrowthPercent: null,
+      healthStatus: "unknown",
+      healthExplanation: "Failed to connect to SEC EDGAR API.",
     };
   }
 }
