@@ -6,6 +6,7 @@ import {
   type ParsedFinancials,
   type FinancialHealthStatus,
 } from "@/services/secService";
+import { useFavoritesWatchlist } from "@/hooks/useFavoritesWatchlist";
 import {
   ResponsiveContainer,
   BarChart,
@@ -30,6 +31,8 @@ export function SecFinancialsCard({
   const [financials, setFinancials] = useState<ParsedFinancials | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { isFavorite, toggleFavorite } = useFavoritesWatchlist();
 
   useEffect(() => {
     async function loadSecData() {
@@ -71,11 +74,11 @@ export function SecFinancialsCard({
   const getBadgeStyle = (status: FinancialHealthStatus) => {
     switch (status) {
       case "strong_growth":
-        return "bg-emerald-950 text-emerald-400 border-emerald-800/60";
+        return "bg-emerald-950 text-emerald-400 border-emerald-800/60 shadow-sm shadow-emerald-900/30";
       case "stable":
-        return "bg-amber-950 text-amber-400 border-amber-800/60";
+        return "bg-amber-950 text-amber-400 border-amber-800/60 shadow-sm shadow-amber-900/30";
       case "decline":
-        return "bg-rose-950 text-rose-400 border-rose-800/60";
+        return "bg-rose-950 text-rose-400 border-rose-800/60 shadow-sm shadow-rose-900/30";
       default:
         return "bg-neutral-800 text-gray-400 border-neutral-700";
     }
@@ -94,14 +97,39 @@ export function SecFinancialsCard({
     }
   };
 
+  const currentEntityName = financials?.entityName || `CIK: ${cik}`;
+  const isFav = isFavorite(tickerLabel);
+
   return (
-    <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 shadow-xl space-y-6">
+    <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 shadow-xl space-y-6 transition-all duration-200 hover:border-neutral-700/80">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-800 pb-4">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="text-lg font-bold text-white">
+            <h3 className="text-lg font-bold text-white tracking-wide">
               SEC EDGAR Financials
             </h3>
+
+            {/* Bookmark Star Toggle Button */}
+            <button
+              onClick={() =>
+                toggleFavorite({
+                  ticker: tickerLabel,
+                  name: currentEntityName,
+                  assetType: "stock",
+                  cik,
+                })
+              }
+              className="p-1 rounded text-amber-400 hover:bg-neutral-800 transition-all active:scale-90"
+              title={isFav ? "Remove from Favorites" : "Add to Favorites"}
+            >
+              <svg
+                className={`w-5 h-5 ${isFav ? "fill-amber-400" : "fill-none stroke-current stroke-2"}`}
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+              </svg>
+            </button>
+
             <span className="px-2 py-0.5 text-xs font-bold rounded bg-blue-950 text-blue-400 border border-blue-800/50">
               Verified 10-K
             </span>
@@ -110,7 +138,7 @@ export function SecFinancialsCard({
             {financials && !isLoading && (
               <span
                 title={financials.healthExplanation}
-                className={`px-2.5 py-0.5 text-xs font-bold rounded-full border cursor-help ${getBadgeStyle(
+                className={`px-2.5 py-0.5 text-xs font-bold rounded-full border cursor-help transition-all duration-200 hover:scale-105 ${getBadgeStyle(
                   financials.healthStatus
                 )}`}
               >
@@ -120,7 +148,7 @@ export function SecFinancialsCard({
           </div>
 
           <p className="text-xs text-gray-400 mt-1">
-            {financials?.entityName ? financials.entityName : `CIK: ${cik}`}{" "}
+            {currentEntityName}{" "}
             {financials?.healthExplanation && (
               <span className="text-gray-500 block sm:inline">
                 • {financials.healthExplanation}
@@ -136,11 +164,11 @@ export function SecFinancialsCard({
             value={inputCik}
             onChange={(e) => setInputCik(e.target.value)}
             placeholder="CIK Number (e.g. 0000320193)"
-            className="bg-neutral-950 border border-neutral-800 rounded px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 w-44"
+            className="bg-neutral-950 border border-neutral-800 rounded px-3 py-1.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 w-44 transition-all"
           />
           <button
             type="submit"
-            className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-gray-200 rounded border border-neutral-700 transition-colors"
+            className="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 active:scale-95 text-xs font-semibold text-gray-200 rounded border border-neutral-700 transition-all duration-150"
           >
             Lookup
           </button>
@@ -148,9 +176,23 @@ export function SecFinancialsCard({
       </div>
 
       {isLoading ? (
-        <div className="h-64 flex flex-col items-center justify-center text-gray-400 space-y-2">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-xs">Fetching official SEC XBRL filings for CIK {cik}...</p>
+        /* Shimmer Skeleton Loader */
+        <div className="space-y-4 animate-pulse">
+          <div className="h-64 w-full bg-neutral-950/60 rounded-xl border border-neutral-800/50 p-4 flex items-end justify-between gap-3">
+            {[40, 65, 55, 80, 95].map((h, i) => (
+              <div
+                key={i}
+                className="w-full bg-neutral-800/80 rounded-t transition-all"
+                style={{ height: `${h}%` }}
+              />
+            ))}
+          </div>
+
+          <div className="h-28 bg-neutral-950/60 rounded-lg border border-neutral-800/50 p-3 space-y-2">
+            <div className="h-4 bg-neutral-800/80 rounded w-1/3" />
+            <div className="h-3 bg-neutral-800/60 rounded w-full" />
+            <div className="h-3 bg-neutral-800/60 rounded w-5/6" />
+          </div>
         </div>
       ) : error ? (
         <div className="h-64 flex flex-col items-center justify-center text-center p-4 rounded-lg bg-neutral-950/50 border border-neutral-800">
@@ -228,7 +270,7 @@ export function SecFinancialsCard({
               </thead>
               <tbody className="divide-y divide-neutral-800">
                 {financials?.revenues.map((r, idx) => (
-                  <tr key={idx} className="hover:bg-neutral-900/40">
+                  <tr key={idx} className="hover:bg-neutral-900/60 transition-colors">
                     <td className="px-4 py-2.5 font-medium text-white">
                       FY {r.year} ({r.period})
                     </td>
