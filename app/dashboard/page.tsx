@@ -1,12 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { Navbar } from "@/components/Navbar";
 import { WatchlistTable } from "@/components/watchlist-table";
 import { ProfitCalculator } from "@/components/ProfitCalculator";
 import { SecFinancialsCard } from "@/components/SecFinancialsCard";
-import { FavoritesWatchlistCard } from "@/components/FavoritesWatchlistCard";
-import { FinancialNewsCard } from "@/components/FinancialNewsCard";
-import { addToWatchlist, type WatchlistItem } from "./actions";
+import { addToWatchlist, signOut, type WatchlistItem } from "./actions";
 
 const DEFAULT_WATCHLIST: WatchlistItem[] = [
   {
@@ -86,7 +83,33 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-gray-100 flex flex-col">
-      <Navbar userEmail={user.email} />
+      <header className="border-b border-neutral-800 bg-neutral-900/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/30">
+              R
+            </div>
+            <span className="font-extrabold text-xl tracking-tight text-white">
+              Stock & ETF Radar
+            </span>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <span className="text-xs text-gray-400 hidden sm:inline-block">
+              Logged in as:{" "}
+              <strong className="text-gray-200">{user.email}</strong>
+            </span>
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="px-3.5 py-1.5 text-xs font-semibold rounded-md border border-neutral-700 bg-neutral-800 text-gray-300 hover:bg-neutral-700 hover:text-white transition-colors"
+              >
+                Sign Out
+              </button>
+            </form>
+          </div>
+        </div>
+      </header>
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -130,11 +153,7 @@ export default async function DashboardPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <SecFinancialsCard initialCik="0000320193" tickerLabel="AAPL" />
-          <div className="space-y-8">
-            <FavoritesWatchlistCard />
-            <FinancialNewsCard />
-            <ProfitCalculator />
-          </div>
+          <ProfitCalculator />
         </div>
       </main>
 
