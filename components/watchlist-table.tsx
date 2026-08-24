@@ -51,23 +51,10 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* Interactive Stock Chart Section */}
-      <div className="w-full overflow-hidden transition-all duration-200">
+      <div className="w-full overflow-hidden">
         {isChartLoading ? (
-          <div className="w-full h-64 bg-neutral-900 border border-neutral-800 rounded-xl p-5 shadow-xl space-y-4 animate-pulse">
-            <div className="flex justify-between items-center">
-              <div className="h-5 bg-neutral-800 rounded w-1/4" />
-              <div className="h-5 bg-neutral-800 rounded w-1/6" />
-            </div>
-            <div className="h-44 w-full bg-neutral-950/60 rounded-lg border border-neutral-800/50 flex items-end p-3 gap-2">
-              {[30, 50, 40, 70, 60, 85, 75].map((h, i) => (
-                <div
-                  key={i}
-                  className="w-full bg-neutral-800/80 rounded-t"
-                  style={{ height: `${h}%` }}
-                />
-              ))}
-            </div>
+          <div className="w-full h-64 bg-neutral-900 border border-neutral-800 rounded-xl flex items-center justify-center text-gray-400">
+            Loading {selectedTicker} chart data...
           </div>
         ) : (
           <StockChart
@@ -78,9 +65,7 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
         )}
       </div>
 
-      {/* Search & Filter Controls */}
       <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
-        {/* Search Bar */}
         <div className="relative w-full sm:w-80 md:w-96">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <svg
@@ -102,20 +87,19 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
             placeholder="Search by Ticker or Asset Name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-4 py-2 bg-neutral-900 border border-neutral-800 rounded-lg text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            className="block w-full pl-10 pr-4 py-2 bg-neutral-900 border border-neutral-800 rounded-lg text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
 
-        {/* Tab Selector */}
         <div className="flex p-1 bg-neutral-900 rounded-lg border border-neutral-800 w-full sm:w-auto">
           {(["all", "stock", "etf"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 sm:flex-none px-3.5 py-1.5 text-xs font-semibold rounded-md capitalize transition-all duration-150 ${
+              className={`flex-1 sm:flex-none px-3.5 py-1.5 text-xs font-semibold rounded-md capitalize transition-colors ${
                 activeTab === tab
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
-                  : "text-gray-400 hover:text-gray-200 hover:bg-neutral-800/50"
+                  ? "bg-blue-600 text-white shadow-sm"
+                  : "text-gray-400 hover:text-gray-200"
               }`}
             >
               {tab === "all" ? "All Assets" : `${tab}s`}
@@ -124,8 +108,7 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
         </div>
       </div>
 
-      {/* Watchlist Table with Clean Horizontal Scroll */}
-      <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-none sm:rounded-xl border-y sm:border border-neutral-800 bg-neutral-900 shadow-xl transition-all duration-200 hover:border-neutral-700/80">
+      <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-none sm:rounded-xl border-y sm:border border-neutral-800 bg-neutral-900 shadow-xl">
         <table className="w-full text-left text-sm text-gray-300 min-w-[550px]">
           <thead className="bg-neutral-950/60 text-xs uppercase text-gray-400 border-b border-neutral-800">
             <tr>
@@ -163,9 +146,9 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
                   <tr
                     key={item.id}
                     onClick={() => setSelectedTicker(item.ticker)}
-                    className={`cursor-pointer transition-all duration-150 ${
+                    className={`cursor-pointer transition-colors ${
                       isSelected
-                        ? "bg-neutral-800/90 border-l-4 border-l-blue-500 font-semibold"
+                        ? "bg-neutral-800/80 border-l-4 border-l-blue-500"
                         : "hover:bg-neutral-800/50"
                     }`}
                   >
@@ -208,7 +191,7 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
                         onClick={async () => {
                           await removeFromWatchlist(item.id);
                         }}
-                        className="text-gray-500 hover:text-rose-400 active:scale-90 p-1.5 rounded transition-all duration-150"
+                        className="text-gray-500 hover:text-rose-400 p-1 rounded transition-colors"
                         title="Remove from Watchlist"
                       >
                         <svg
