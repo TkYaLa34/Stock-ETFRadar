@@ -85,79 +85,50 @@ export default async function DashboardPage() {
       : DEFAULT_WATCHLIST;
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-gray-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-neutral-950 text-gray-100 flex flex-col">
       <Navbar userEmail={user.email} />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
-        {/* Page Header Banner */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-800 pb-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-                Market Radar Dashboard
-              </h1>
-              <span className="px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider rounded-full bg-blue-950 text-blue-400 border border-blue-800/60 shadow-sm">
-                Real-Time
-              </span>
-            </div>
-            <p className="text-xs sm:text-sm text-gray-400 mt-1">
-              Monitor equities, SEC 10-K filings, custom watchlists, and live market intelligence.
+            <h1 className="text-3xl font-bold tracking-tight text-white">
+              Market Radar Dashboard
+            </h1>
+            <p className="text-sm text-gray-400 mt-1">
+              Monitor real-time prices, manage custom watchlists, and filter stocks & ETFs.
             </p>
           </div>
 
-          {/* Quick Add Ticker Input */}
           <form
             action={addToWatchlist}
-            className="flex items-center gap-2 bg-neutral-900 border border-neutral-800 p-2 rounded-xl shadow-lg transition-all hover:border-neutral-700"
+            className="flex items-center gap-2 bg-neutral-900 border border-neutral-800 p-2 rounded-lg"
           >
             <input
               type="text"
               name="ticker"
               placeholder="Ticker (e.g. SPY)"
               required
-              className="bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-1.5 text-xs text-white placeholder-gray-500 uppercase focus:outline-none focus:ring-2 focus:ring-blue-500 w-32"
+              className="bg-neutral-950 border border-neutral-800 rounded px-3 py-1.5 text-xs text-white placeholder-gray-500 uppercase focus:outline-none focus:ring-2 focus:ring-blue-500 w-32"
             />
             <select
               name="asset_type"
-              className="bg-neutral-950 border border-neutral-800 rounded-lg px-2.5 py-1.5 text-xs text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="bg-neutral-950 border border-neutral-800 rounded px-2 py-1.5 text-xs text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="stock">Stock</option>
               <option value="etf">ETF</option>
             </select>
             <button
               type="submit"
-              className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-semibold text-xs rounded-lg shadow-md transition-all"
+              className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded transition-colors"
             >
               + Add
             </button>
           </form>
         </div>
 
-        {/* Quick Overview Stat Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-neutral-900 border border-neutral-800/80 rounded-xl p-4 shadow-lg">
-            <span className="text-xs font-medium text-gray-400 block mb-1">Tracked Watchlist</span>
-            <span className="text-xl font-bold text-white">{items.length} Assets</span>
-          </div>
-          <div className="bg-neutral-900 border border-neutral-800/80 rounded-xl p-4 shadow-lg">
-            <span className="text-xs font-medium text-gray-400 block mb-1">Market Sentiment</span>
-            <span className="text-xl font-bold text-emerald-400">Bullish (+1.2%)</span>
-          </div>
-          <div className="bg-neutral-900 border border-neutral-800/80 rounded-xl p-4 shadow-lg">
-            <span className="text-xs font-medium text-gray-400 block mb-1">SEC 10-K Verification</span>
-            <span className="text-xl font-bold text-blue-400">Active / Live</span>
-          </div>
-          <div className="bg-neutral-900 border border-neutral-800/80 rounded-xl p-4 shadow-lg">
-            <span className="text-xs font-medium text-gray-400 block mb-1">SaaS Tier</span>
-            <span className="text-xl font-bold text-amber-400">Pro Radar</span>
-          </div>
-        </div>
-
-        {/* Interactive Watchlist Table & Price Chart */}
         <WatchlistTable initialItems={items} />
 
-        {/* Two-Column Responsive Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <SecFinancialsCard initialCik="0000320193" tickerLabel="AAPL" />
           <div className="space-y-8">
             <FavoritesWatchlistCard />
@@ -167,7 +138,6 @@ export default async function DashboardPage() {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-neutral-800 py-6 text-center text-xs text-gray-500">
         © {new Date().getFullYear()} Stock & ETF Radar SaaS. All rights reserved.
       </footer>
