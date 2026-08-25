@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { signOut } from "@/app/dashboard/actions";
+import { signOut } from "@/app/(dashboard)/dashboard/actions";
 
 interface NavbarProps {
   userEmail?: string;
@@ -98,10 +98,21 @@ export function Navbar({ userEmail }: NavbarProps) {
 
           {/* Menu 4: Screener */}
           <Link
-            href="/dashboard?view=screener"
+            href="/screener"
             className="hover:text-white transition-colors py-2"
           >
             4. Stock & ETF Screener
+          </Link>
+
+          {/* Menu 5: Model Portfolios */}
+          <Link
+            href="/portfolios"
+            className="hover:text-blue-400 text-blue-300 font-semibold transition-colors py-2 flex items-center gap-1.5"
+          >
+            <span>5. Model Portfolios</span>
+            <span className="px-1.5 py-0.2 text-[9px] font-extrabold uppercase rounded bg-blue-950 text-blue-400 border border-blue-800/60">
+              AI
+            </span>
           </Link>
         </nav>
 
@@ -210,8 +221,13 @@ export function Navbar({ userEmail }: NavbarProps) {
           </div>
 
           {/* 4. Screener */}
-          <Link href="/dashboard?view=screener" className="block py-2 text-gray-200 font-semibold border-b border-neutral-800/60">
+          <Link href="/screener" className="block py-2 text-gray-200 font-semibold border-b border-neutral-800/60">
             4. Stock & ETF Screener
+          </Link>
+
+          {/* 5. Model Portfolios */}
+          <Link href="/portfolios" className="block py-2 text-blue-400 font-semibold border-b border-neutral-800/60">
+            5. Model Portfolios / พอร์ตจำลอง AI
           </Link>
 
           {/* User Sign Out */}
