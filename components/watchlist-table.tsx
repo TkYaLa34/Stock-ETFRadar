@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { removeFromWatchlist, type WatchlistItem } from "@/app/dashboard/actions";
+import { removeFromWatchlist, type WatchlistItem } from "@/app/(dashboard)/dashboard/actions";
 import { StockChart, type PricePoint } from "@/components/StockChart";
 
 interface WatchlistTableProps {
@@ -17,6 +17,9 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
   const [chartData, setChartData] = useState<PricePoint[]>([]);
   const [isChartLoading, setIsChartLoading] = useState(false);
   const [isPositiveTrend, setIsPositiveTrend] = useState(true);
+
+  const stockCount = initialItems.filter((i) => i.asset_type === "stock").length;
+  const etfCount = initialItems.filter((i) => i.asset_type === "etf").length;
 
   useEffect(() => {
     async function fetchChartData() {
@@ -78,49 +81,66 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
         )}
       </div>
 
-      {/* Search & Filter Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
-        {/* Search Bar */}
-        <div className="relative w-full sm:w-80 md:w-96">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg
-              className="h-5 w-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+      {/* Capacity Badges & Search Controls */}
+      <div className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 bg-neutral-900/60 border border-neutral-800/80 rounded-xl p-3.5 px-5">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-white tracking-wide">Watchlist Capacity:</span>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-950 text-blue-400 border border-blue-800/50">
+              Stocks: {stockCount}/30
+            </span>
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-purple-950 text-purple-400 border border-purple-800/50">
+              ETFs: {etfCount}/30
+            </span>
           </div>
-          <input
-            type="text"
-            placeholder="Search by Ticker or Asset Name..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-4 py-2 bg-neutral-900 border border-neutral-800 rounded-lg text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
-          />
+          <span className="text-[11px] text-gray-400">
+            Max 30 items per list tier
+          </span>
         </div>
 
-        {/* Tab Selector */}
-        <div className="flex p-1 bg-neutral-900 rounded-lg border border-neutral-800 w-full sm:w-auto">
-          {(["all", "stock", "etf"] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`flex-1 sm:flex-none px-3.5 py-1.5 text-xs font-semibold rounded-md capitalize transition-all duration-150 ${
-                activeTab === tab
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
-                  : "text-gray-400 hover:text-gray-200 hover:bg-neutral-800/50"
-              }`}
-            >
-              {tab === "all" ? "All Assets" : `${tab}s`}
-            </button>
-          ))}
+        <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
+          {/* Search Bar */}
+          <div className="relative w-full sm:w-80 md:w-96">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                className="h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Search by Ticker or Asset Name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="block w-full pl-10 pr-4 py-2.5 bg-neutral-900 border border-neutral-800 rounded-lg text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            />
+          </div>
+
+          {/* Tab Selector */}
+          <div className="flex p-1 bg-neutral-900 rounded-lg border border-neutral-800 w-full sm:w-auto min-h-[44px] items-center">
+            {(["all", "stock", "etf"] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 sm:flex-none px-4 py-2 text-xs font-semibold rounded-md capitalize transition-all duration-150 ${
+                  activeTab === tab
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-neutral-800/50"
+                }`}
+              >
+                {tab === "all" ? "All Assets" : `${tab}s`}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -208,7 +228,7 @@ export function WatchlistTable({ initialItems }: WatchlistTableProps) {
                         onClick={async () => {
                           await removeFromWatchlist(item.id);
                         }}
-                        className="text-gray-500 hover:text-rose-400 active:scale-90 p-1.5 rounded transition-all duration-150"
+                        className="text-gray-500 hover:text-rose-400 active:scale-90 p-2 min-h-[38px] min-w-[38px] inline-flex items-center justify-center rounded transition-all duration-150"
                         title="Remove from Watchlist"
                       >
                         <svg
