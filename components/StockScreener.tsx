@@ -157,19 +157,19 @@ export function StockScreener() {
     switch (status) {
       case "strong_growth":
         return (
-          <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60 shadow-sm shadow-emerald-900/20">
+          <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/60">
             Strong Growth
           </span>
         );
       case "stable":
         return (
-          <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-amber-950 text-amber-400 border border-amber-800/60 shadow-sm shadow-amber-900/20">
+          <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-amber-950 text-amber-400 border border-amber-800/60">
             Stable
           </span>
         );
       case "decline":
         return (
-          <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-rose-950 text-rose-400 border border-rose-800/60 shadow-sm shadow-rose-900/20">
+          <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-rose-950 text-rose-400 border border-rose-800/60">
             Decline
           </span>
         );
@@ -177,12 +177,12 @@ export function StockScreener() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8">
-      {/* Interactive Controls & Filters Card */}
-      <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 sm:p-6 shadow-xl space-y-6 transition-all duration-200 hover:border-neutral-700/80">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-800 pb-4">
+    <div className="space-y-8">
+      {/* Interactive Controls & Filters */}
+      <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 shadow-xl space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-800 pb-4">
           <div>
-            <h2 className="text-xl font-extrabold text-white tracking-wide">
+            <h2 className="text-xl font-bold text-white tracking-wide">
               Stock & ETF Screener Radar
             </h2>
             <p className="text-xs text-gray-400 mt-1">
@@ -197,7 +197,7 @@ export function StockScreener() {
               setMinMarketCap(0);
               setSearchTerm("");
             }}
-            className="self-start sm:self-auto px-4 py-2 bg-neutral-800 hover:bg-neutral-700 active:scale-95 text-xs font-semibold text-gray-300 rounded-lg border border-neutral-700 transition-all shadow-sm"
+            className="px-3.5 py-1.5 bg-neutral-800 hover:bg-neutral-700 active:scale-95 text-xs font-semibold text-gray-300 rounded-lg border border-neutral-700 transition-all"
           >
             Reset Filters
           </button>
@@ -206,7 +206,7 @@ export function StockScreener() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {/* Search Input */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-gray-400 mb-1">
               Search Asset
             </label>
             <input
@@ -214,19 +214,19 @@ export function StockScreener() {
               placeholder="Ticker / Name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {/* Asset Type Select */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-gray-400 mb-1">
               Asset Type
             </label>
             <select
               value={assetType}
               onChange={(e) => setAssetType(e.target.value as any)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Assets</option>
               <option value="stock">Stocks Only</option>
@@ -236,13 +236,13 @@ export function StockScreener() {
 
           {/* Financial Health Select */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-gray-400 mb-1">
               10-K Health Status
             </label>
             <select
               value={healthFilter}
               onChange={(e) => setHealthFilter(e.target.value)}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Statuses</option>
               <option value="strong_growth">Strong Growth (+5% YoY)</option>
@@ -253,7 +253,7 @@ export function StockScreener() {
 
           {/* Max P/E Slider */}
           <div>
-            <div className="flex justify-between items-center mb-1.5">
+            <div className="flex justify-between items-center mb-1">
               <label className="text-xs font-medium text-gray-400">
                 Max P/E Ratio
               </label>
@@ -268,19 +268,19 @@ export function StockScreener() {
               step={5}
               value={maxPeRatio}
               onChange={(e) => setMaxPeRatio(Number(e.target.value))}
-              className="w-full accent-blue-500 cursor-pointer h-2 bg-neutral-950 rounded-lg"
+              className="w-full accent-blue-500 cursor-pointer"
             />
           </div>
 
           {/* Min Market Cap */}
           <div>
-            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+            <label className="block text-xs font-medium text-gray-400 mb-1">
               Min Market Cap
             </label>
             <select
               value={minMarketCap}
               onChange={(e) => setMinMarketCap(Number(e.target.value))}
-              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
+              className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-3 py-2 text-xs text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value={0}>All Sizes ($0+)</option>
               <option value={10}>Large Cap ($10B+)</option>
@@ -291,13 +291,13 @@ export function StockScreener() {
         </div>
       </div>
 
-      {/* Screener Results Table Component */}
-      <div className="overflow-x-auto -mx-4 sm:mx-0 rounded-none sm:rounded-xl border-y sm:border border-neutral-800 bg-neutral-900 shadow-xl transition-all duration-200 hover:border-neutral-700/80">
-        <div className="px-4 sm:px-6 py-4 border-b border-neutral-800 flex justify-between items-center">
+      {/* Screener Results Table */}
+      <div className="overflow-x-auto rounded-xl border border-neutral-800 bg-neutral-900 shadow-xl">
+        <div className="px-6 py-4 border-b border-neutral-800 flex justify-between items-center">
           <span className="text-xs font-semibold text-gray-400">
-            Matching Assets: <strong className="text-white text-sm">{filteredAssets.length}</strong>
+            Matching Assets: <strong className="text-white">{filteredAssets.length}</strong>
           </span>
-          <span className="text-[11px] text-gray-500 font-medium">
+          <span className="text-[11px] text-gray-500">
             Click table headers to sort
           </span>
         </div>
@@ -305,29 +305,29 @@ export function StockScreener() {
         <table className="w-full text-left text-xs text-gray-300 min-w-[650px]">
           <thead className="bg-neutral-950/80 uppercase text-gray-400 border-b border-neutral-800">
             <tr>
-              <th className="px-4 sm:px-6 py-3.5 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort("ticker")}>
+              <th className="px-6 py-3.5 cursor-pointer hover:text-white" onClick={() => handleSort("ticker")}>
                 Ticker / Name {sortBy === "ticker" && (sortOrder === "asc" ? "▲" : "▼")}
               </th>
-              <th className="px-4 sm:px-6 py-3.5 cursor-pointer hover:text-white transition-colors" onClick={() => handleSort("assetType")}>
+              <th className="px-6 py-3.5 cursor-pointer hover:text-white" onClick={() => handleSort("assetType")}>
                 Type {sortBy === "assetType" && (sortOrder === "asc" ? "▲" : "▼")}
               </th>
-              <th className="px-4 sm:px-6 py-3.5 text-right cursor-pointer hover:text-white transition-colors" onClick={() => handleSort("marketCapBillion")}>
+              <th className="px-6 py-3.5 text-right cursor-pointer hover:text-white" onClick={() => handleSort("marketCapBillion")}>
                 Market Cap {sortBy === "marketCapBillion" && (sortOrder === "asc" ? "▲" : "▼")}
               </th>
-              <th className="px-4 sm:px-6 py-3.5 text-right cursor-pointer hover:text-white transition-colors" onClick={() => handleSort("peRatio")}>
+              <th className="px-6 py-3.5 text-right cursor-pointer hover:text-white" onClick={() => handleSort("peRatio")}>
                 P/E Ratio {sortBy === "peRatio" && (sortOrder === "asc" ? "▲" : "▼")}
               </th>
-              <th className="px-4 sm:px-6 py-3.5 text-right cursor-pointer hover:text-white transition-colors" onClick={() => handleSort("price")}>
+              <th className="px-6 py-3.5 text-right cursor-pointer hover:text-white" onClick={() => handleSort("price")}>
                 Price ($) {sortBy === "price" && (sortOrder === "asc" ? "▲" : "▼")}
               </th>
-              <th className="px-4 sm:px-6 py-3.5 text-center">10-K Health</th>
-              <th className="px-4 sm:px-6 py-3.5 text-center">Bookmark</th>
+              <th className="px-6 py-3.5 text-center">10-K Health</th>
+              <th className="px-6 py-3.5 text-center">Bookmark</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-neutral-800">
             {filteredAssets.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center text-gray-500 text-sm">
+                <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                   No assets match the selected screener criteria. Try clearing filters.
                 </td>
               </tr>
@@ -335,12 +335,12 @@ export function StockScreener() {
               filteredAssets.map((asset) => {
                 const isFav = isFavorite(asset.ticker);
                 return (
-                  <tr key={asset.ticker} className="hover:bg-neutral-800/60 transition-colors">
-                    <td className="px-4 sm:px-6 py-3.5">
+                  <tr key={asset.ticker} className="hover:bg-neutral-800/50 transition-colors">
+                    <td className="px-6 py-3.5">
                       <div className="font-bold text-white text-sm">{asset.ticker}</div>
                       <div className="text-[11px] text-gray-400">{asset.name}</div>
                     </td>
-                    <td className="px-4 sm:px-6 py-3.5">
+                    <td className="px-6 py-3.5">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded uppercase font-bold text-[10px] ${
                           asset.assetType === "stock"
@@ -351,22 +351,22 @@ export function StockScreener() {
                         {asset.assetType}
                       </span>
                     </td>
-                    <td className="px-4 sm:px-6 py-3.5 text-right font-medium text-white">
+                    <td className="px-6 py-3.5 text-right font-medium text-white">
                       ${asset.marketCapBillion >= 1000 ? `${(asset.marketCapBillion / 1000).toFixed(2)}T` : `${asset.marketCapBillion}B`}
                     </td>
-                    <td className="px-4 sm:px-6 py-3.5 text-right font-mono text-gray-200 font-semibold">
+                    <td className="px-6 py-3.5 text-right font-mono text-gray-200">
                       {asset.peRatio.toFixed(1)}x
                     </td>
-                    <td className="px-4 sm:px-6 py-3.5 text-right font-medium text-white">
+                    <td className="px-6 py-3.5 text-right font-medium text-white">
                       ${asset.price.toFixed(2)}
                       <span className={`block text-[10px] ${asset.changePercent >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
                         {asset.changePercent >= 0 ? "+" : ""}{asset.changePercent.toFixed(2)}%
                       </span>
                     </td>
-                    <td className="px-4 sm:px-6 py-3.5 text-center">
+                    <td className="px-6 py-3.5 text-center">
                       {getHealthBadge(asset.healthStatus)}
                     </td>
-                    <td className="px-4 sm:px-6 py-3.5 text-center">
+                    <td className="px-6 py-3.5 text-center">
                       <button
                         onClick={() =>
                           toggleFavorite({
@@ -375,7 +375,7 @@ export function StockScreener() {
                             assetType: asset.assetType,
                           })
                         }
-                        className="p-2 rounded text-amber-400 hover:bg-neutral-800 active:scale-90 transition-all"
+                        className="p-1.5 rounded text-amber-400 hover:bg-neutral-800 transition-all active:scale-90"
                         title={isFav ? "Remove Bookmark" : "Add Bookmark"}
                       >
                         <svg

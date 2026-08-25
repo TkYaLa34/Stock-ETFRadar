@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { signOut } from "@/app/(dashboard)/dashboard/actions";
+import { signOut } from "@/app/dashboard/actions";
 
 interface NavbarProps {
   userEmail?: string;
@@ -98,7 +98,7 @@ export function Navbar({ userEmail }: NavbarProps) {
 
           {/* Menu 4: Screener */}
           <Link
-            href="/screener"
+            href="/dashboard?view=screener"
             className="hover:text-white transition-colors py-2"
           >
             4. Stock & ETF Screener
@@ -210,7 +210,7 @@ export function Navbar({ userEmail }: NavbarProps) {
           </div>
 
           {/* 4. Screener */}
-          <Link href="/screener" className="block py-2 text-gray-200 font-semibold border-b border-neutral-800/60">
+          <Link href="/dashboard?view=screener" className="block py-2 text-gray-200 font-semibold border-b border-neutral-800/60">
             4. Stock & ETF Screener
           </Link>
 
