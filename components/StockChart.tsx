@@ -1,19 +1,61 @@
 "use client";
 
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
+import dynamic from "next/dynamic";
 
 export interface PricePoint {
   time: string;
   price: number;
 }
+
+const RechartsLineChart = dynamic(
+  () =>
+    import("recharts").then((mod) => {
+      const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } = mod;
+      return function ChartComponent({ data, lineColor }: { data: PricePoint[]; lineColor: string }) {
+        return (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
+              <XAxis dataKey="time" stroke="#737373" tick={{ fontSize: 11 }} tickLine={false} />
+              <YAxis
+                stroke="#737373"
+                tick={{ fontSize: 11 }}
+                tickLine={false}
+                domain={["auto", "auto"]}
+                tickFormatter={(val) => `$${val.toFixed(0)}`}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#171717",
+                  borderColor: "#404040",
+                  borderRadius: "0.5rem",
+                  color: "#f5f5f5",
+                  fontSize: "12px",
+                }}
+                formatter={(value: any) => [`$${Number(value || 0).toFixed(2)}`, "Price"]}
+              />
+              <Line
+                type="monotone"
+                dataKey="price"
+                stroke={lineColor}
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 5, fill: lineColor, stroke: "#171717" }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        );
+      };
+    }),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full w-full flex items-center justify-center bg-neutral-950/40 rounded-lg text-xs text-gray-500 animate-pulse">
+        Loading chart engine...
+      </div>
+    ),
+  }
+);
 
 interface StockChartProps {
   ticker: string;
@@ -58,52 +100,7 @@ export function StockChart({
             No chart data available for {ticker}.
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={data}
-              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="#262626"
-                vertical={false}
-              />
-              <XAxis
-                dataKey="time"
-                stroke="#737373"
-                tick={{ fontSize: 11 }}
-                tickLine={false}
-              />
-              <YAxis
-                stroke="#737373"
-                tick={{ fontSize: 11 }}
-                tickLine={false}
-                domain={["auto", "auto"]}
-                tickFormatter={(val) => `$${val.toFixed(0)}`}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#171717",
-                  borderColor: "#404040",
-                  borderRadius: "0.5rem",
-                  color: "#f5f5f5",
-                  fontSize: "12px",
-                }}
-                formatter={(value: any) => [
-                  `$${Number(value || 0).toFixed(2)}`,
-                  "Price",
-                ]}
-              />
-              <Line
-                type="monotone"
-                dataKey="price"
-                stroke={lineColor}
-                strokeWidth={2}
-                dot={false}
-                activeDot={{ r: 5, fill: lineColor, stroke: "#171717" }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <RechartsLineChart data={data} lineColor={lineColor} />
         )}
       </div>
     </div>

@@ -44,23 +44,3 @@ export async function signup(formData: FormData) {
   revalidatePath("/", "layout");
   redirect("/login?message=Check email to continue sign in process");
 }
-
-export async function signInWithGoogle() {
-  const supabase = createClient();
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: `${appUrl}/auth/callback`,
-    },
-  });
-
-  if (error) {
-    return redirect(`/login?error=${encodeURIComponent(error.message)}`);
-  }
-
-  if (data.url) {
-    redirect(data.url);
-  }
-}

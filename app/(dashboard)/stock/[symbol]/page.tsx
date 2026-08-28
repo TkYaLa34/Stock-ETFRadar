@@ -2,6 +2,8 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { AnalystQuantAnalysis } from "@/components/AnalystQuantAnalysis";
+import { MarketDepthVisualizer } from "@/components/MarketDepthVisualizer";
+import { SecMdaAnalysis } from "@/components/SecMdaAnalysis";
 import Link from "next/link";
 
 export default async function StockDetailPage({
@@ -71,6 +73,26 @@ export default async function StockDetailPage({
             Analysis (บทวิเคราะห์ / Analyst & Quant)
           </Link>
           <Link
+            href={`/stock/${symbol}?tab=depth`}
+            className={`px-4 py-3 text-xs font-bold whitespace-nowrap border-b-2 transition-all ${
+              activeTab === "depth"
+                ? "border-blue-500 text-blue-400"
+                : "border-transparent text-gray-400 hover:text-gray-200"
+            }`}
+          >
+            Market Depth & Order Book
+          </Link>
+          <Link
+            href={`/stock/${symbol}?tab=mda`}
+            className={`px-4 py-3 text-xs font-bold whitespace-nowrap border-b-2 transition-all ${
+              activeTab === "mda"
+                ? "border-blue-500 text-blue-400"
+                : "border-transparent text-gray-400 hover:text-gray-200"
+            }`}
+          >
+            AI SEC MD&A Analysis
+          </Link>
+          <Link
             href={`/stock/${symbol}?tab=financials`}
             className={`px-4 py-3 text-xs font-bold whitespace-nowrap border-b-2 transition-all ${
               activeTab === "financials"
@@ -94,9 +116,13 @@ export default async function StockDetailPage({
 
         {activeTab === "analysis" ? (
           <AnalystQuantAnalysis symbol={symbol} />
+        ) : activeTab === "depth" ? (
+          <MarketDepthVisualizer symbol={symbol} />
+        ) : activeTab === "mda" ? (
+          <SecMdaAnalysis symbol={symbol} />
         ) : (
           <div className="p-8 rounded-xl bg-neutral-900 border border-neutral-800 text-center text-xs text-gray-400">
-            Selected tab: <strong className="text-white uppercase">{activeTab}</strong>. Navigate to the Analysis tab to view Wall Street consensus and Quant radar charts.
+            Selected tab: <strong className="text-white uppercase">{activeTab}</strong>. Navigate to Analysis, Market Depth, or SEC MD&A to view detailed analytics.
           </div>
         )}
       </main>
