@@ -1,3 +1,5 @@
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { WatchlistTable } from "@/components/watchlist-table";
 import { ProfitCalculator } from "@/components/ProfitCalculator";
@@ -55,11 +57,36 @@ const DEFAULT_WATCHLIST: WatchlistItem[] = [
 ];
 
 export default async function DashboardPage() {
-  const items: WatchlistItem[] = DEFAULT_WATCHLIST;
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const { data: dbWatchlist } = await supabase
+    .from("watchlists")
+    .select("*")
+    .eq("user_id", user.id);
+
+  const items: WatchlistItem[] =
+    dbWatchlist && dbWatchlist.length > 0
+      ? dbWatchlist.map((w) => ({
+          id: w.id,
+          ticker: w.ticker,
+          name: w.ticker,
+          asset_type: w.asset_type as "stock" | "etf",
+          price: 150 + Math.random() * 200,
+          change: (Math.random() - 0.4) * 10,
+          change_percent: (Math.random() - 0.4) * 5,
+        }))
+      : DEFAULT_WATCHLIST;
 
   return (
     <div className="min-h-screen bg-neutral-950 text-gray-100 flex flex-col font-sans">
-      <Navbar />
+      <Navbar userEmail={user.email} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
         {/* Page Header Banner */}
@@ -121,8 +148,8 @@ export default async function DashboardPage() {
             <span className="text-xl font-bold text-blue-400">Active / Live</span>
           </div>
           <div className="bg-neutral-900 border border-neutral-800/80 rounded-xl p-4 shadow-lg">
-            <span className="text-xs font-medium text-gray-400 block mb-1">Access Mode</span>
-            <span className="text-xl font-bold text-amber-400">Public Access</span>
+            <span className="text-xs font-medium text-gray-400 block mb-1">SaaS Tier</span>
+            <span className="text-xl font-bold text-amber-400">Pro Radar</span>
           </div>
         </div>
 

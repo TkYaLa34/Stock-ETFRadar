@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { signOut } from "@/app/(dashboard)/dashboard/actions";
 
-export function Navbar() {
+interface NavbarProps {
+  userEmail?: string;
+}
+
+export function Navbar({ userEmail }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
@@ -144,6 +149,23 @@ export function Navbar() {
           </Link>
         </nav>
 
+        {/* User Actions */}
+        <div className="hidden lg:flex items-center gap-4">
+          {userEmail && (
+            <span className="text-xs text-gray-400">
+              {userEmail}
+            </span>
+          )}
+          <form action={signOut}>
+            <button
+              type="submit"
+              className="px-3.5 py-1.5 text-xs font-semibold rounded-md border border-neutral-700 bg-neutral-800 text-gray-300 hover:bg-neutral-700 hover:text-white transition-all active:scale-95"
+            >
+              Sign Out
+            </button>
+          </form>
+        </div>
+
         {/* Mobile Hamburger Button */}
         <button
           onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -255,6 +277,19 @@ export function Navbar() {
           <Link href="/simulation" className="block py-2 text-purple-400 font-semibold border-b border-neutral-800/60">
             8. Monte Carlo Risk Simulator
           </Link>
+
+          {/* User Sign Out */}
+          <div className="pt-2 flex items-center justify-between">
+            {userEmail && <span className="text-xs text-gray-400">{userEmail}</span>}
+            <form action={signOut}>
+              <button
+                type="submit"
+                className="px-3.5 py-1.5 text-xs font-semibold rounded-md border border-neutral-700 bg-neutral-800 text-gray-300"
+              >
+                Sign Out
+              </button>
+            </form>
+          </div>
         </div>
       )}
     </header>

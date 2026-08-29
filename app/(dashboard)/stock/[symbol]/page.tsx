@@ -1,3 +1,5 @@
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { AnalystQuantAnalysis } from "@/components/AnalystQuantAnalysis";
 import { MarketDepthVisualizer } from "@/components/MarketDepthVisualizer";
@@ -11,12 +13,21 @@ export default async function StockDetailPage({
   params: { symbol: string };
   searchParams: { tab?: string };
 }) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
   const symbol = params.symbol.toUpperCase();
   const activeTab = searchParams.tab || "analysis";
 
   return (
     <div className="min-h-screen bg-neutral-950 text-gray-100 flex flex-col font-sans">
-      <Navbar />
+      <Navbar userEmail={user.email} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-800 pb-6">
