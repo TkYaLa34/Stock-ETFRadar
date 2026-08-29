@@ -20,25 +20,8 @@ export async function GET(request: Request) {
     "StockETFRadar contact@stocketfradar.app";
 
   try {
-    const response = await fetch(secUrl, {
-      headers: {
-        "User-Agent": userAgent,
-        Accept: "application/json",
-      },
-      next: { revalidate: 3600 },
-    });
-
-    if (!response.ok) {
-      return NextResponse.json(
-        {
-          error: `SEC EDGAR API responded with status ${response.status}`,
-          statusText: response.statusText,
-        },
-        { status: response.status }
-      );
-    }
-
-    const data = await response.json();
+    const { getCachedSecCompanyFacts } = await import("@/lib/financial-api");
+    const data = await getCachedSecCompanyFacts(paddedCik);
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(

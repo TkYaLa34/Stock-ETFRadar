@@ -114,6 +114,39 @@ export function Navbar({ userEmail }: NavbarProps) {
               AI
             </span>
           </Link>
+
+          {/* Menu 6: AI Portfolio Analyst */}
+          <Link
+            href="/ai-analyst"
+            className="hover:text-purple-400 text-purple-300 font-semibold transition-colors py-2 flex items-center gap-1.5"
+          >
+            <span>6. AI Analyst & Backtest</span>
+            <span className="px-1.5 py-0.2 text-[9px] font-extrabold uppercase rounded bg-purple-950 text-purple-400 border border-purple-800/60">
+              PRO
+            </span>
+          </Link>
+
+          {/* Menu 7: Smart Alerts */}
+          <Link
+            href="/alerts"
+            className="hover:text-blue-400 text-blue-300 font-semibold transition-colors py-2 flex items-center gap-1.5"
+          >
+            <span>7. Smart Alerts</span>
+            <span className="px-1.5 py-0.2 text-[9px] font-extrabold uppercase rounded bg-blue-950 text-blue-400 border border-blue-800/60">
+              PUSH
+            </span>
+          </Link>
+
+          {/* Menu 8: Monte Carlo Simulator */}
+          <Link
+            href="/simulation"
+            className="hover:text-purple-400 text-purple-300 font-semibold transition-colors py-2 flex items-center gap-1.5"
+          >
+            <span>8. Risk Simulator</span>
+            <span className="px-1.5 py-0.2 text-[9px] font-extrabold uppercase rounded bg-purple-950 text-purple-400 border border-purple-800/60">
+              VaR
+            </span>
+          </Link>
         </nav>
 
         {/* User Actions */}
@@ -228,6 +261,21 @@ export function Navbar({ userEmail }: NavbarProps) {
           {/* 5. Model Portfolios */}
           <Link href="/portfolios" className="block py-2 text-blue-400 font-semibold border-b border-neutral-800/60">
             5. Model Portfolios / พอร์ตจำลอง AI
+          </Link>
+
+          {/* 6. AI Analyst */}
+          <Link href="/ai-analyst" className="block py-2 text-purple-400 font-semibold border-b border-neutral-800/60">
+            6. AI Analyst & Multi-Session Backtest
+          </Link>
+
+          {/* 7. Smart Alerts */}
+          <Link href="/alerts" className="block py-2 text-blue-400 font-semibold border-b border-neutral-800/60">
+            7. Smart Multi-Condition Alerts
+          </Link>
+
+          {/* 8. Monte Carlo Simulator */}
+          <Link href="/simulation" className="block py-2 text-purple-400 font-semibold border-b border-neutral-800/60">
+            8. Monte Carlo Risk Simulator
           </Link>
 
           {/* User Sign Out */}
