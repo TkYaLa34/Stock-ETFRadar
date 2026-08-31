@@ -17,7 +17,7 @@ export default function Home() {
             Zero-Install Web App
           </span>
           <Link
-            href="/login"
+            href="/dashboard"
             className="px-4 py-2 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-md active:scale-95"
           >
             Launch Web Radar →
@@ -38,7 +38,7 @@ export default function Home() {
         </p>
         <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
           <Link
-            href="/login"
+            href="/dashboard"
             className="px-6 py-3 text-sm font-bold rounded-xl bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-lg shadow-blue-600/30 active:scale-95"
           >
             Access Web Dashboard Now

@@ -1,226 +1,125 @@
 # Stock & ETF Radar SaaS
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/TkYaLa34/Stock-ETFRadar)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Framework](https://img.shields.io/badge/Next.js-14%2B-black?logo=next.js)](https://nextjs.org/)
-[![Language](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![Database](https://img.shields.io/badge/Supabase-PostgreSQL-emerald?logo=supabase)](https://supabase.com/)
+![Build Status](https://img.shields.io/badge/Build-Passing-emerald?style=flat-square&logo=github)
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
+![Next.js](https://img.shields.io/badge/Framework-Next.js%2014-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/Language-TypeScript%205-blue?style=flat-square&logo=typescript)
+![Supabase](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-emerald?style=flat-square&logo=supabase)
 
-A modern, real-time market screening and monitoring platform built for retail investors, day traders, and financial analysts to track equities and ETFs with custom criteria, price alerts, and automated signals.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Core Features](#core-features)
-- [Tech Stack](#tech-stack)
-- [Architecture & Database Schema](#architecture--database-schema)
-- [Getting Started / Installation](#getting-started--installation)
-  - [Prerequisites](#prerequisites)
-  - [1. Clone Repository](#1-clone-repository)
-  - [2. Install Dependencies](#2-install-dependencies)
-  - [3. Configure Environment Variables](#3-configure-environment-variables)
-  - [4. Run Development Server](#4-run-development-server)
-- [Deployment](#deployment)
-  - [Deploying to Vercel](#deploying-to-vercel)
-  - [Linking Supabase](#linking-supabase)
-- [Contributing](#contributing)
-- [License](#license)
+A production-ready, zero-install, web-browser-first **Stock & ETF Radar SaaS** built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, and **Supabase**. Designed to provide instant financial market intelligence, interactive sector heatmaps, SEC 10-K XBRL financial health badges, real-time streaming price quotes, AI model portfolios, multi-session backtesting, Monte Carlo risk simulations, and smart Web Push alerts.
 
 ---
 
-## Overview
+## 1. Overview
 
-**Stock & ETF Radar SaaS** empowers investors to discover market opportunities instantly. By providing real-time data streaming, customizable stock/ETF screeners, threshold price alerts, and dynamic watchlists, the platform eliminates market noise and delivers actionable financial intelligence directly to users. Designed with modern SaaS architecture, it supports user subscriptions, tier-based feature access, and seamless multi-device synchronization.
+Stock & ETF Radar SaaS empowers equity investors and financial analysts with real-time stock/ETF screening and quantitative portfolio analysis directly inside any web browser on desktop or mobile devices.
 
----
-
-## Core Features
-
-- 🔐 **Authentication & User Management:** Secure sign-up/login powered by Supabase Auth with support for OAuth providers, email/password, and session persistence.
-- 📊 **Stock & ETF Screening Radar:** Advanced filtering engine by market cap, sector, P/E ratio, dividend yield, RSI, and technical indicators.
-- ⚡ **Real-time Watchlists:** Dynamic watchlists with WebSocket/real-time streaming price updates.
-- 🔔 **Custom Price Alerts:** Real-time notifications (email/in-app) when target assets hit user-defined upper or lower price limits.
-- 💳 **SaaS Subscription Engine:** Tiered subscription management (Free, Pro, Premium) integrated for premium screener metrics and unlimited watchlists.
-- 🎨 **Responsive Dashboard:** Sleek, modern user interface crafted with Next.js App Router and Tailwind CSS, featuring light/dark mode support.
+### Key Value Propositions
+- **Zero-Install Web App:** 100% browser-based experience with zero app store downloads or native installations required.
+- **SEC 10-K Financial Verification:** Automated XBRL data extraction with color-coded YoY revenue health badges.
+- **Institutional AI Analytics:** Multi-session backtesting engine, 10,000-path Monte Carlo Value-at-Risk (VaR) simulations, and live Web Push alerts.
+- **Mobile-First Market Dashboard:** Treemap sector heatmaps, concept baskets, mini market index tickers, and fixed mobile bottom navigation.
 
 ---
 
-## Tech Stack
+## 2. Core Features
 
-### Frontend
-- **Framework:** Next.js (App Router, React Server Components)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS, Lucide React (Icons)
-- **State & Data Fetching:** React Query / Server Actions
-
-### Backend & Database
-- **BaaS Platform:** Supabase
-- **Database:** PostgreSQL
-- **Authentication:** Supabase Auth (JWT)
-- **Real-time Updates:** Supabase Realtime (WebSockets)
-- **Storage & RLS:** PostgreSQL Row Level Security (RLS) policies
-
-### Infrastructure & Deployment
-- **Hosting:** Vercel
-- **Version Control:** GitHub
+- **Public Market Dashboard (`/dashboard`):** Real-time watchlist management, mini market trend previews, Market Sector Treemap heatmap, and concept sector baskets.
+- **Interactive Stock & ETF Screener (`/screener`):** Dynamic multi-criteria filtering by asset type, market cap, P/E ratio, and SEC financial health.
+- **Analyst & Quant Radar (`/stock/[symbol]`):** Wall Street analyst target forecasts, consensus gauges, 5-dimension Quant radar charts, order book market depth, and AI SEC MD&A text extraction.
+- **AI Portfolio Analyst & Backtesting (`/ai-analyst`):** Multi-session strategy backtesting (Regular, Overnight, Cross-Session) with dynamic spread, slippage, and price impact execution cost modeling.
+- **Smart Multi-Condition Web Push Alerts (`/alerts`):** Combine Price, RSI, and Order Book Imbalance rules with Boolean `AND`/`OR` operators delivered via PWA Service Workers (`/sw.js`).
+- **Monte Carlo Risk Simulator (`/simulation`):** 10,000-iteration Geometric Brownian Motion simulations calculating VaR 95%, CVaR 95%, and valuation percentile fan charts.
 
 ---
 
-## Architecture & Database Schema
+## 3. Tech Stack
 
-The application follows a modular Next.js App Router architecture integrated directly with Supabase for data persistence and authentication. Row Level Security (RLS) ensures tenant isolation and strict privacy across all tables.
+- **Frontend:** Next.js 14 (App Router), React 18, TypeScript, Tailwind CSS, Recharts.
+- **Backend & Database:** Next.js Server Actions, Route Handlers, Supabase (PostgreSQL with RLS).
+- **Performance & Optimization:** Server-side data caching with `unstable_cache`, code-split dynamic chart chunking (`next/dynamic`), PWA Web Push Service Workers.
+- **Testing & Tooling:** Playwright E2E testing suite (`/tests/e2e.spec.ts`), ESLint, PostCSS, Autoprefixer.
+
+---
+
+## 4. Architecture & Database Schema
 
 ```
-+-------------------------------------------------------------+
-|                       Next.js Frontend                      |
-|           (App Router, React Server Components)            |
-+------------------------------+------------------------------+
-                               |
-                   Supabase SDK / REST API
-                               |
-+------------------------------v------------------------------+
-|                      Supabase Backend                       |
-|  +--------------------+  +--------------------+  +--------+ |
-|  |   Supabase Auth    |  | Supabase Realtime  |  |  RLS   | |
-|  +--------------------+  +--------------------+  +--------+ |
-|                              |                              |
-|                    PostgreSQL Database                      |
-|      [profiles] -------> [watchlists] -------> [price_alerts]|
-+-------------------------------------------------------------+
+                  ┌───────────────────────────────────────────┐
+                  │          Next.js 14 App Router            │
+                  │    (Public Dashboard, Screener, AI)       │
+                  └─────────────────────┬─────────────────────┘
+                                        │
+                 ┌──────────────────────┼──────────────────────┐
+                 ▼                      ▼                      ▼
+        ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+        │  Finnhub API     │  │  SEC EDGAR API   │  │  Supabase PG DB  │
+        │  (Quotes/News)   │  │  (XBRL 10-K)     │  │  (Watchlists/RLS)│
+        └──────────────────┘  └──────────────────┘  └──────────────────┘
 ```
 
-### Key Database Tables
-
-#### 1. `profiles`
-Stores user profile details and subscription metadata synced with `auth.users`.
-- `id` (uuid, Primary Key, references `auth.users.id`)
-- `email` (text)
-- `full_name` (text)
-- `subscription_tier` (text, e.g. `'free'`, `'pro'`, `'enterprise'`)
-- `updated_at` (timestamptz)
-
-#### 2. `watchlists`
-Stores user-created watchlists and individual tracked tickers.
-- `id` (uuid, Primary Key)
-- `user_id` (uuid, Foreign Key -> `profiles.id`)
-- `ticker` (text, e.g. `'AAPL'`, `'VOO'`)
-- `asset_type` (text, e.g. `'stock'`, `'etf'`)
-- `added_at` (timestamptz)
-
-#### 3. `price_alerts`
-Tracks price triggers set by users for specific assets.
-- `id` (uuid, Primary Key)
-- `user_id` (uuid, Foreign Key -> `profiles.id`)
-- `ticker` (text)
-- `target_price` (numeric)
-- `condition` (text, e.g. `'ABOVE'`, `'BELOW'`)
-- `is_triggered` (boolean)
-- `created_at` (timestamptz)
+### Database Schema Tables
+- `profiles`: User account details, subscription tier (`free` | `pro`), and preferences.
+- `watchlists`: Saved tickers (`ticker`, `asset_type`, `user_id`, `created_at`).
+- `price_alerts`: Active alert triggers (`symbol`, `target_price`, `rsi_threshold`, `imbalance_threshold`, `status`).
 
 ---
 
-## Getting Started / Installation
-
-Follow these instructions to set up and run the Stock & ETF Radar SaaS project locally on your machine.
+## 5. Getting Started & Local Setup
 
 ### Prerequisites
+- Node.js 18.x or higher
+- npm or pnpm
 
-Ensure you have the following installed on your local environment:
-- **Node.js:** v18.0.0 or higher
-- **Package Manager:** `npm` (v9+) or `pnpm` (v8+)
-- **Git**
+### Step-by-Step Installation
 
-### 1. Clone Repository
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-org/stock-etfradar.git
+   cd stock-etfradar
+   ```
 
-```bash
-git clone https://github.com/TkYaLa34/Stock-ETFRadar.git
-cd Stock-ETFRadar
-```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-### 2. Install Dependencies
+3. **Configure Environment Variables:**
+   Copy `.env.example` to `.env.local`:
+   ```bash
+   cp .env.example .env.local
+   ```
+   Fill in your Supabase project credentials and API keys:
+   ```env
+   NEXT_PUBLIC_APP_URL=http://localhost:3000
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   FINNHUB_API_KEY=your-finnhub-api-key
+   SEC_EDGAR_USER_AGENT=StockETFRadar contact@stocketfradar.app
+   ```
 
-Using `npm`:
-```bash
-npm install
-```
+4. **Run Development Server:**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Or using `pnpm`:
-```bash
-pnpm install
-```
-
-### 3. Configure Environment Variables
-
-Create a `.env.local` file in the root directory of the project:
-
-```bash
-cp .env.example .env.local
-```
-
-Populate `.env.local` with your Supabase credentials and application configuration:
-
-```env
-# Next.js App
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-
-# Supabase Credentials
-NEXT_PUBLIC_SUPABASE_URL=https://your-supabase-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-
-# Financial Data API (Optional / Standard Provider)
-FINANCIAL_DATA_API_KEY=your-financial-data-api-key
-```
-
-### 4. Run Development Server
-
-Start the Next.js development server:
-
-```bash
-npm run dev
-# or
-pnpm dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+5. **Run Production Build Verification:**
+   ```bash
+   npm run build
+   ```
 
 ---
 
-## Deployment
+## 6. Deployment Guide
 
 ### Deploying to Vercel
-
-1. Push your repository to GitHub.
-2. Import your project into [Vercel](https://vercel.com/new).
-3. Select **Next.js** as the framework preset.
-4. Add the required environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, etc.) in the Vercel project settings.
-5. Click **Deploy**.
-
-### Linking Supabase
-
-1. Create a project on [Supabase Dashboard](https://supabase.com/dashboard).
-2. Execute the database schema migrations or create the tables (`profiles`, `watchlists`, `price_alerts`) with appropriate RLS policies.
-3. Configure **Authentication URL Configuration** under Supabase Auth Settings:
-   - **Site URL:** `https://your-app.vercel.app`
-   - **Redirect URLs:** `https://your-app.vercel.app/auth/callback`
-4. Copy the Project URL and Anon API key into Vercel's environment variable configuration.
+1. Import the repository into your Vercel Dashboard.
+2. Configure the environment variables specified in `.env.example`.
+3. Vercel automatically detects Next.js 14 and compiles static/dynamic routes cleanly.
 
 ---
 
-## Contributing
+## 7. License
 
-Contributions are welcome! To contribute:
-
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature/amazing-feature`.
-3. Commit your changes: `git commit -m 'Add amazing feature'`.
-4. Push to the branch: `git push origin feature/amazing-feature`.
-5. Open a Pull Request.
-
----
-
-## License
-
-Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more information.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
