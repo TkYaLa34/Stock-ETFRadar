@@ -1,6 +1,10 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
+import { TopMarketBar } from "@/components/TopMarketBar";
+import { MarketSectorsHeatmap } from "@/components/MarketSectorsHeatmap";
+import { ConceptSectors } from "@/components/ConceptSectors";
+import { BottomNav } from "@/components/BottomNav";
 import { WatchlistTable } from "@/components/watchlist-table";
 import { ProfitCalculator } from "@/components/ProfitCalculator";
 import { SecFinancialsCard } from "@/components/SecFinancialsCard";
@@ -85,10 +89,13 @@ export default async function DashboardPage() {
       : DEFAULT_WATCHLIST;
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-gray-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-neutral-950 text-gray-100 flex flex-col font-sans pb-20 lg:pb-0">
       <Navbar userEmail={user.email} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
+        {/* Top Market Bar Switcher & Mini Market Trend Preview */}
+        <TopMarketBar />
+
         {/* Page Header Banner */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-800 pb-6">
           <div>
@@ -153,6 +160,12 @@ export default async function DashboardPage() {
           </div>
         </div>
 
+        {/* Market Sectors Heatmap */}
+        <MarketSectorsHeatmap />
+
+        {/* Concept & Thematic Sectors */}
+        <ConceptSectors />
+
         {/* Interactive Watchlist Table & Price Chart */}
         <WatchlistTable initialItems={items} />
 
@@ -166,6 +179,9 @@ export default async function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* Fixed Bottom Navigation Bar (Mobile) */}
+      <BottomNav />
 
       {/* Footer */}
       <footer className="border-t border-neutral-800 py-6 text-center text-xs text-gray-500">
