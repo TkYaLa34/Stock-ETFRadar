@@ -120,6 +120,16 @@ Stock & ETF Radar SaaS empowers equity investors and financial analysts with rea
 
 ---
 
-## 7. License
+## 7. Contributing
+
+Contributions are welcome! Please follow these steps to contribute:
+1. Fork the repository and create a feature branch (`git checkout -b feat/amazing-feature`).
+2. Commit your changes with clear messages (`git commit -m 'feat: add amazing feature'`).
+3. Ensure all tests pass and `npm run build` completes with zero errors.
+4. Open a Pull Request for review.
+
+---
+
+## 8. License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
