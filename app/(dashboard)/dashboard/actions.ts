@@ -14,6 +14,27 @@ export interface WatchlistItem {
   change_percent: number;
 }
 
+export interface StockSearchResult {
+  id?: string;
+  ticker: string;
+  name: string;
+  sector?: string;
+  market_cap?: number;
+}
+
+export interface EtfSearchResult {
+  id?: string;
+  ticker: string;
+  name: string;
+  asset_class?: string;
+  aum?: number;
+}
+
+export interface SearchStocksAndEtfsResult {
+  stocks: StockSearchResult[];
+  etfs: EtfSearchResult[];
+}
+
 export async function signOut() {
   const supabase = createClient();
   await supabase.auth.signOut();
@@ -59,4 +80,66 @@ export async function removeFromWatchlist(id: string) {
   await supabase.from("watchlists").delete().eq("id", id).eq("user_id", user.id);
 
   revalidatePath("/dashboard");
+}
+
+/**
+ * Server Action for searching stocks and ETFs in Supabase.
+ * Queries `stocks` and `etfs` tables using `ilike` on `ticker` and `name`.
+ * Limits output to 5 items per table and handles errors gracefully.
+ */
+export async function searchStocksAndEtfs(
+  query: string
+): Promise<SearchStocksAndEtfsResult> {
+  const result: SearchStocksAndEtfsResult = {
+    stocks: [],
+    etfs: [],
+  };
+
+  const cleanQuery = query?.trim();
+  if (!cleanQuery) {
+    return result;
+  }
+
+  try {
+    const supabase = createClient();
+    const ilikePattern = `%${cleanQuery}%`;
+
+    // Query stocks table (limit 5)
+    const { data: stocksData, error: stocksError } = await supabase
+      .from("stocks")
+      .select("id, ticker, name, sector, market_cap")
+      .or(`ticker.ilike.${ilikePattern},name.ilike.${ilikePattern}`)
+      .limit(5);
+
+    if (!stocksError && stocksData) {
+      result.stocks = stocksData.map((item: any) => ({
+        id: item.id,
+        ticker: item.ticker,
+        name: item.name || item.ticker,
+        sector: item.sector,
+        market_cap: item.market_cap,
+      }));
+    }
+
+    // Query etfs table (limit 5)
+    const { data: etfsData, error: etfsError } = await supabase
+      .from("etfs")
+      .select("id, ticker, name, asset_class, aum")
+      .or(`ticker.ilike.${ilikePattern},name.ilike.${ilikePattern}`)
+      .limit(5);
+
+    if (!etfsError && etfsData) {
+      result.etfs = etfsData.map((item: any) => ({
+        id: item.id,
+        ticker: item.ticker,
+        name: item.name || item.ticker,
+        asset_class: item.asset_class,
+        aum: item.aum,
+      }));
+    }
+  } catch (error) {
+    console.error("Error searching stocks and ETFs:", error);
+  }
+
+  return result;
 }
