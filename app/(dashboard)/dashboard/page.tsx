@@ -4,9 +4,10 @@ import { Navbar } from "@/components/Navbar";
 import { TopMarketBar } from "@/components/TopMarketBar";
 import { MarketSectorsHeatmap } from "@/components/MarketSectorsHeatmap";
 import { ConceptSectors } from "@/components/ConceptSectors";
+import { AverageCostCalculator } from "@/components/AverageCostCalculator";
+import { EconomicCalendar } from "@/components/EconomicCalendar";
 import { BottomNav } from "@/components/BottomNav";
 import { WatchlistTable } from "@/components/watchlist-table";
-import { AverageCostCalculator } from "@/components/AverageCostCalculator";
 import { ProfitCalculator } from "@/components/ProfitCalculator";
 import { SecFinancialsCard } from "@/components/SecFinancialsCard";
 import { FavoritesWatchlistCard } from "@/components/FavoritesWatchlistCard";
@@ -166,6 +167,9 @@ export default async function DashboardPage() {
 
         {/* Concept & Thematic Sectors */}
         <ConceptSectors />
+
+        {/* Economic & Earnings Calendar */}
+        <EconomicCalendar />
 
         {/* Average Cost & DCA Accumulation Calculator */}
         <AverageCostCalculator />
