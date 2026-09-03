@@ -4,6 +4,7 @@ import { Navbar } from "@/components/Navbar";
 import { TopMarketBar } from "@/components/TopMarketBar";
 import { MarketSectorsHeatmap } from "@/components/MarketSectorsHeatmap";
 import { ConceptSectors } from "@/components/ConceptSectors";
+import { AssetAllocationRebalancer } from "@/components/AssetAllocationRebalancer";
 import { AverageCostCalculator } from "@/components/AverageCostCalculator";
 import { EconomicCalendar } from "@/components/EconomicCalendar";
 import { BottomNav } from "@/components/BottomNav";
@@ -170,6 +171,9 @@ export default async function DashboardPage() {
 
         {/* Economic & Earnings Calendar */}
         <EconomicCalendar />
+
+        {/* Asset Allocation & Rebalancing Simulator */}
+        <AssetAllocationRebalancer />
 
         {/* Average Cost & DCA Accumulation Calculator */}
         <AverageCostCalculator />
