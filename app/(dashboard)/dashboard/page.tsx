@@ -4,9 +4,6 @@ import { Navbar } from "@/components/Navbar";
 import { TopMarketBar } from "@/components/TopMarketBar";
 import { MarketSectorsHeatmap } from "@/components/MarketSectorsHeatmap";
 import { ConceptSectors } from "@/components/ConceptSectors";
-import { AssetAllocationRebalancer } from "@/components/AssetAllocationRebalancer";
-import { AverageCostCalculator } from "@/components/AverageCostCalculator";
-import { EconomicCalendar } from "@/components/EconomicCalendar";
 import { BottomNav } from "@/components/BottomNav";
 import { WatchlistTable } from "@/components/watchlist-table";
 import { ProfitCalculator } from "@/components/ProfitCalculator";
@@ -168,15 +165,6 @@ export default async function DashboardPage() {
 
         {/* Concept & Thematic Sectors */}
         <ConceptSectors />
-
-        {/* Economic & Earnings Calendar */}
-        <EconomicCalendar />
-
-        {/* Asset Allocation & Rebalancing Simulator */}
-        <AssetAllocationRebalancer />
-
-        {/* Average Cost & DCA Accumulation Calculator */}
-        <AverageCostCalculator />
 
         {/* Interactive Watchlist Table & Price Chart */}
         <WatchlistTable initialItems={items} />
